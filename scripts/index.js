@@ -15,6 +15,9 @@ const profileInfoElement = document.querySelector('.profile__info');
 const profileTitle = profileInfoElement.querySelector('.profile__title');
 const profileDescription = profileInfoElement.querySelector('.profile__description');
 
+const popups = document.querySelectorAll('.popup');
+popups.forEach(popup => { popup.classList.add('popup_is-animated'); });
+
 function createCard(name, link) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     cardElement.querySelector('.card__title').textContent = name;
@@ -84,15 +87,15 @@ cardPopupElement.addEventListener('submit', handleCardFormSubmit);
 const likeButtons = document.querySelectorAll('.card__like-button');
 likeButtons.forEach(likeButton => {
     likeButton.addEventListener('click', function(evt) {
-        evt.target.classList.toggle('.card__like-button_is-active');
+        evt.target.classList.toggle('card__like-button_is-active');
     });
 });
 
 
-// @todo: DOM узлы
+const deleteButtons = document.querySelectorAll('.card__delete-button');
+deleteButtons.forEach(deleteButton => {
+    deleteButton.addEventListener('click',() => {
+        deleteButton.closest('.card').remove();
+    });
+});
 
-// @todo: Функция создания карточки
-
-// @todo: Функция удаления карточки
-
-// @todo: Вывести карточки на страницу
