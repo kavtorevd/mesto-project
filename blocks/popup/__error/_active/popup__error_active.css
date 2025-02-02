@@ -1,0 +1,5 @@
+.popup__error_active {
+    position: relative;
+    top: 5px;
+    display: block;
+}

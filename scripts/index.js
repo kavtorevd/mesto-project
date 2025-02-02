@@ -99,3 +99,81 @@ deleteButtons.forEach(deleteButton => {
     });
 });
 
+const showInputError = (formElement, inputElement, errorMessage) => {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.add('popup__input_error'); // Ensure this class is correct
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__error_active'); // Ensure this class is correct
+};
+
+const hideInputError = (formElement, inputElement) => {
+    const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+    inputElement.classList.remove('popup__input_error'); // Ensure this class is correct
+    errorElement.classList.remove('popup__error_active'); // Ensure this class is correct
+    errorElement.textContent = '';
+};
+
+const checkInputValidity = (formElement, inputElement) => {
+    if (!inputElement.validity.valid) {
+        showInputError(formElement, inputElement, inputElement.validationMessage);
+    } else {
+        hideInputError(formElement, inputElement);
+    }
+};
+
+const setEventListeners = (formElement) => {
+    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+    const buttonElement = formElement.querySelector('.popup__button');
+    toggleButtonState(inputList, buttonElement);
+    inputList.forEach((inputElement) => {
+        inputElement.addEventListener('input', function () {
+            checkInputValidity(formElement, inputElement);
+            toggleButtonState(inputList, buttonElement);
+        });
+    });
+};
+
+const enableValidation = () => {
+    const formList = Array.from(document.querySelectorAll('.popup__form'));
+    formList.forEach((formElement) => {
+        formElement.addEventListener('submit', function (evt) {
+            evt.preventDefault();
+        });
+        setEventListeners(formElement); // Corrected to set event listeners on the form element
+    });
+};
+
+function hasInvalidInput(inputList) {
+    return inputList.some((input) => {
+        return !input.validity.valid;
+    });
+}
+
+function toggleButtonState(inputList, buttonElement){
+    if (hasInvalidInput(inputList)){
+    buttonElement.classList.add('popup__button_inactive');
+    } else {
+    buttonElement.classList.remove('popup__button_inactive');
+    }
+}
+
+function closePopupByOverlay(evt) {
+    if (evt.target.classList.contains('popup')) {
+        closeModal(evt.target);
+    }
+}
+
+popups.forEach(popup => {
+    popup.addEventListener('click', closePopupByOverlay);
+});
+
+const closePopupByEsc = (evt) => {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_is-opened');
+        closeModal(openedPopup);
+    }
+};
+
+document.addEventListener('keydown', closePopupByEsc);
+
+enableValidation();
